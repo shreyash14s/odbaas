@@ -8,6 +8,7 @@
 	</classpathentry>
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.web.container"/>
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.module.container"/>
+<<<<<<< HEAD
 	<classpathentry kind="lib" path="/home/sanjay/jaxrs-ri/api/javax.ws.rs-api-2.1.jar"/>
 	<classpathentry kind="lib" path="/home/sanjay/jaxrs-ri/ext/aopalliance-repackaged-2.5.0-b42.jar"/>
 	<classpathentry kind="lib" path="/home/sanjay/jaxrs-ri/ext/cdi-api-1.1.jar"/>
@@ -40,5 +41,7 @@
 	<classpathentry kind="lib" path="/home/sanjay/jaxrs-ri/lib/jersey-media-json-binding.jar"/>
 	<classpathentry kind="lib" path="/home/sanjay/jaxrs-ri/lib/jersey-media-sse.jar"/>
 	<classpathentry kind="lib" path="/home/sanjay/jaxrs-ri/lib/jersey-server.jar"/>
+=======
+>>>>>>> 8f766eb625c8c400a9d460600e7cfda6c8f51f1f
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>

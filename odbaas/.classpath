@@ -40,5 +40,6 @@
 	<classpathentry kind="lib" path="/home/sanjay/jaxrs-ri/ext/validation-api-1.1.0.Final.jar"/>
 	<classpathentry kind="lib" path="/home/sanjay/jaxrs-ri/ext/yasson-1.0.jar"/>
 	<classpathentry kind="lib" path="/home/sanjay/jaxrs-ri/api/javax.ws.rs-api-2.1.jar"/>
+	<classpathentry kind="lib" path="/home/sanjay/Downloads/mysql-connector.jar"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>

@@ -6,7 +6,7 @@ pom.xml.next
 release.properties
 dependency-reduced-pom.xml
 buildNumber.properties
-WebContent/WEB-INF/web.xml
+# WebContent/WEB-INF/web.xml
 WebContent/WEB-INF/lib/
 .classpath	
 .mvn/timing.properties

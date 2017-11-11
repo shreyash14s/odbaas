@@ -18,9 +18,17 @@ public class Database
 	{
 		doCheck();
 		String url="jdbc:mysql://" + PUBLIC_DNS + 
-				":" + PORT + "/" + DATABASE, REMOTE_DATABASE_USERNAME, 
-				DATABASE_USER_PASSWORD);
-		connection=DriverManager.getConnection(url);
+				":" + PORT + "/" + DATABASE;
+		
+		try 
+		{
+			connection=DriverManager.getConnection(url, REMOTE_DATABASE_USERNAME, DATABASE_USER_PASSWORD);
+		} 
+		catch (SQLException e) 
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	void doCheck()
 	{

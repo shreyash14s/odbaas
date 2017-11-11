@@ -17,7 +17,7 @@ import javax.ws.rs.FormParam;
 import javax.ws.rs.QueryParam;
 
 
-@Path("/odbaas")
+@Path("/")
 public class Server {
 	@Context
 	private ServletContext sctx;
@@ -28,6 +28,7 @@ public class Server {
 	@Produces("application/json")
 	public Response login(@FormParam("user_name") String userName, @FormParam("password") String password)
 	{
+		System.out.println("Login");
 		return null;
 		//something
 			

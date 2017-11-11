@@ -22,6 +22,19 @@ public class Server {
 	@Context
 	private ServletContext sctx;
 	
+        
+        @GET
+	@Path("mytest/{param}")
+	public Response getMsg(@PathParam("param") String msg) 
+        {
+
+            String output = "Jersey say : " + msg;
+
+            return Response.status(200).entity(output).build();
+
+	}
+        
+        
 	@Path("/login")
 	@POST
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
@@ -55,6 +68,15 @@ public class Server {
 			
 	}
 	
+	/*
+	@Path("/mytry")
+	@GET
+    @Produces(MediaType.TEXT_PLAIN)
+	public String mytry()
+	{
+		return "Hi there";
+	}
+	
 	@Path("/select")
 	@GET
 	@Produces("application/json")
@@ -64,8 +86,16 @@ public class Server {
 		//something
 			
 	}
-	
-	
+	*/
+	@Path("/select")
+	@GET
+	@Produces(MediaType.TEXT_PLAIN)
+	public String selectTable()
+	{
+		return "Hi there";
+		//something
+			
+	}
 	@Path("/update/{table_name}")
 	@PUT
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED )

@@ -2,6 +2,8 @@
 
 package com.odbaas;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.ServletContext;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -13,37 +15,47 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.QueryParam;
-
+import org.json.JSONObject;
 
 @Path("/odbaas")
 public class Server {
 	@Context
 	private ServletContext sctx;
 	
-        
-    @GET
+        @GET
 	@Path("mytest/{param}")
 	public Response getMsg(@PathParam("param") String msg) 
         {
-        	System.out.println("Sbfdgn");
-        	Database db = new Database();
+            System.out.println("Sbfdgn");
+            //Database db = new Database();
             String output = "Jersey say : " + msg;
-
+            Login login = new Login("WhutisThis","There");
             return Response.status(200).entity(output).build();
+            
 
 	}
         
-        
-	@Path("/login")
+       	@Path("/login")
 	@POST
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	@Produces("application/json")
 	public Response login(@FormParam("user_name") String userName, @FormParam("password") String password)
 	{
-		return null;
-		//something
+            JSONObject obj = new JSONObject();
+            Login login = new Login(userName,password);
+            String token = login.getToken();
+            
+            if (!(token.length() > 0))
+            {
+                obj.put("error","User-name already exists or Password is Invalid.");
+                return Response.status(Status.UNAUTHORIZED).entity(obj.toString()).build();
+            }
+            obj.put("token",token);
+            return Response.status(Status.OK).entity(obj.toString()).build();
+            //something
 			
 	}
 	

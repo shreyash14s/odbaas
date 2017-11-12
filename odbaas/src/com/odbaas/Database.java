@@ -1,3 +1,4 @@
+
 package com.odbaas;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -22,39 +23,93 @@ public class Database
 		
 		try 
 		{
-			connection=DriverManager.getConnection(url, REMOTE_DATABASE_USERNAME, DATABASE_USER_PASSWORD);
-                        Statement st =  connection.createStatement();
-                        st.execute("use "+DATABASE);
-                        ResultSet rs = st.executeQuery("select * from mytabletest");
-                        while(rs.next())
-			//rs.next();
-			{
-				String id=rs.getString("id");
-                                String name=rs.getString("name");
-				//String name=rs.getString("name");
-			//System.out.println("id:"+id+" name:"+name);
-				System.out.println("id:"+id);
-                                System.out.println("name:"+name);
-			}
-			System.out.println("All Good ! :) :)");
-		} 
+                    connection=DriverManager.getConnection(url, REMOTE_DATABASE_USERNAME, DATABASE_USER_PASSWORD);
+                } 
 		catch (SQLException e) 
 		{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
-	void doCheck()
+	private void doCheck()
 	{
 		try 
 		{
-			Class.forName(myConnector);
+                    Class.forName(myConnector);
 			
 	    } 
 		catch (ClassNotFoundException e) 
 		{
-	        System.out.println("error !!!!!!");
-	        e.printStackTrace();
+                    System.out.println("error !!!!!!");
+                    e.printStackTrace();
 		}
 	}
+        public String selectOne(String databaseName,String searchQuery,String column)
+        {
+            String result="";
+            try
+            {
+                Statement st =  connection.createStatement();
+                st.execute("use "+databaseName);
+                ResultSet rs = st.executeQuery(searchQuery);
+                if(rs.next())
+                {
+                    result = rs.getString(column);
+                }
+            }
+            catch(Exception e)
+            {
+                e.printStackTrace();
+            }
+            return result;
+        }
+        public boolean isTrue(String databaseName,String searchQuery)
+        {
+            int  count=0;
+            try
+            {
+                Statement st =  connection.createStatement();
+                st.execute("use "+databaseName);
+                ResultSet rs = st.executeQuery(searchQuery);
+                while(rs.next())
+                {
+                    ++count;
+                }                
+            }
+            catch(Exception e)
+            {
+                e.printStackTrace();
+            }
+            return count > 0;            
+        }
+        public int insert(String databaseName,String searchQuery)
+        {
+            int val=0;
+            try
+            {
+                Statement st =  connection.createStatement();
+                st.execute("use "+databaseName);
+                val = st.executeUpdate(searchQuery);
+            }
+            catch(Exception e)
+            {
+                e.printStackTrace();
+            }
+            return val;
+        }
+         public int update(String databaseName,String searchQuery)
+        {
+            int val=0;
+            try
+            {
+                Statement st =  connection.createStatement();
+                st.execute("use "+databaseName);
+                val = st.executeUpdate(searchQuery);
+            }
+            catch(Exception e)
+            {
+                e.printStackTrace();
+            }
+            return val;
+        }
 }

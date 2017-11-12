@@ -18,11 +18,25 @@ public class Database
 	{
 		doCheck();
 		String url="jdbc:mysql://" + PUBLIC_DNS + 
-				":" + PORT + "/" + DATABASE;
+				":" + PORT ;
 		
 		try 
 		{
 			connection=DriverManager.getConnection(url, REMOTE_DATABASE_USERNAME, DATABASE_USER_PASSWORD);
+                        Statement st =  connection.createStatement();
+                        st.execute("use "+DATABASE);
+                        ResultSet rs = st.executeQuery("select * from mytabletest");
+                        while(rs.next())
+			//rs.next();
+			{
+				String id=rs.getString("id");
+                                String name=rs.getString("name");
+				//String name=rs.getString("name");
+			//System.out.println("id:"+id+" name:"+name);
+				System.out.println("id:"+id);
+                                System.out.println("name:"+name);
+			}
+			System.out.println("All Good ! :) :)");
 		} 
 		catch (SQLException e) 
 		{
@@ -35,6 +49,7 @@ public class Database
 		try 
 		{
 			Class.forName(myConnector);
+			
 	    } 
 		catch (ClassNotFoundException e) 
 		{

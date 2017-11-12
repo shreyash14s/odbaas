@@ -27,7 +27,8 @@ public class Server {
 	@Path("mytest/{param}")
 	public Response getMsg(@PathParam("param") String msg) 
         {
-
+        	System.out.println("Sbfdgn");
+        	Database db = new Database();
             String output = "Jersey say : " + msg;
 
             return Response.status(200).entity(output).build();

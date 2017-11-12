@@ -23,7 +23,7 @@ public class Server {
 	private ServletContext sctx;
 	
         
-        @GET
+    @GET
 	@Path("mytest/{param}")
 	public Response getMsg(@PathParam("param") String msg) 
         {

@@ -7,6 +7,7 @@ import java.util.logging.Logger;
 import javax.servlet.ServletContext;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Context;
@@ -31,12 +32,24 @@ public class Server {
         {
             System.out.println("Sbfdgn");
             //Database db = new Database();
-            String output = "Jersey say : " + msg;
             Login login = new Login("WhutisThis","There");
-            return Response.status(200).entity(output).build();
+            String output = "Jersey say : " + login.getToken();
             
-
-	}
+            return Response.status(200).entity(output).build();
+        }
+        
+        @GET
+	@Path("mytry/{param}")
+	public Response tryMsg(@PathParam("param") String msg) 
+        {
+            System.out.println("try");
+            //Database db = new Database();
+            
+            Validate validate = new Validate(msg);
+            String output = "tryMsg say : " + validate.isValid();
+            System.out.println(validate.getUser());
+            return Response.status(200).entity(output).build();
+        }
         
        	@Path("/login")
 	@POST
@@ -51,9 +64,11 @@ public class Server {
             if (!(token.length() > 0))
             {
                 obj.put("error","User-name already exists or Password is Invalid.");
+                obj.put("status",401);
                 return Response.status(Status.UNAUTHORIZED).entity(obj.toString()).build();
             }
             obj.put("token",token);
+            obj.put("status",200);
             return Response.status(Status.OK).entity(obj.toString()).build();
             //something
 			
@@ -65,7 +80,8 @@ public class Server {
 	@Produces("application/json")
 	public Response createTable(@PathParam("table_name") String tableName, @FormParam("token") String token, @FormParam("schema") String schema, @FormParam("primary_key") String pKey)
 	{
-		return null;
+            
+            return null;
 		//something
 			
 	}
@@ -121,7 +137,7 @@ public class Server {
 	}
 	
 	@Path("/delete/{table_name}")
-	@POST
+	@DELETE
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	@Produces("application/json")
 	public Response deleteTable(@PathParam("table_name") String tableName, @FormParam("token") String token,@QueryParam("where") String where )
@@ -132,7 +148,7 @@ public class Server {
 	}
 	
 	@Path("/drop/{table_name}")
-	@POST
+        @DELETE
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	@Produces("application/json")
 	public Response dropTable(@PathParam("table_name") String tableName, @FormParam("token") String token )

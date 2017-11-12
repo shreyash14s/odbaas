@@ -21,18 +21,53 @@ public class Login
     private final String tableName="Users";
     private IAMClient client;
     private Database db;
-
-    
+    private String user_name;
+    private String uid;
     private String token;
-    Login(String user_name,String password)
+    public String getUser_name()
+    {
+        return user_name;
+    }
+
+    public String getUid()
+    {
+        return uid;
+    }
+    
+    Login()
     {
         this.client= new IAMClient();
         this.db=new Database();
+    }
+    Login(String token)
+    {
+        this();
+        this.token=token;       
+        String myQuery= "SELECT * from "+tableName+" where token='"+token+"';";
+        if(db.isTrue(internalDB, myQuery))
+        {
+            this.uid= db.selectOne(internalDB, myQuery,"uid");
+            this.user_name=db.selectOne(internalDB, myQuery,"user");
+            System.out.println(uid);
+            System.out.println(user_name);
+        }
+        else
+        {
+            this.uid="";
+            this.user_name="";
+        }
+        
+    }
+    Login(String user_name,String password)
+    {
+        this();
+        this.user_name=user_name;
         String myQuery= "SELECT * from "+tableName+" where user='"+user_name+"';";
         if(db.isTrue(internalDB, myQuery))
         {
             System.out.println("Existing User-Name!");
-            String uid= db.selectOne(internalDB, myQuery,"uid");
+            this.uid= db.selectOne(internalDB, myQuery,"uid");
+            
             System.out.println(uid);
             this.token=getToken(appId, uid, password);
             System.out.println(token);
@@ -49,7 +84,7 @@ public class Login
         }
         else
         {
-            String uid = signUp(user_name, password);
+            this.uid = signUp(user_name, password);
             System.out.println(uid);
             this.token=getToken(appId, uid, password);
             if (token.length()>0)
@@ -57,10 +92,7 @@ public class Login
                 myQuery="INSERT INTO "+tableName+" values ('"+token+"','"+user_name+"','"+uid+"')"+";";
                 System.out.println(myQuery);
                 System.out.println(db.insert(internalDB, myQuery));
-            }
-            
-            
-                       
+            }                       
         }              
     }
     
@@ -95,5 +127,20 @@ public class Login
             token="";
         }
         return token;
+    }
+    boolean isTokenValid()
+    {
+        boolean val;
+        try
+        {
+            IAMResponse response = client.validateToken(appId, token);
+            val=true;
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+            val=false;
+        }
+        return val;
     }
 }

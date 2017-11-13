@@ -32,7 +32,7 @@ public class Server {
         {
             System.out.println("Sbfdgn");
             //Database db = new Database();
-            Login login = new Login("WhutisThis","There");
+            Login login = new Login("WhutisThis", "There"); //Handle exceptions
             String output = "Jersey say : " + login.getToken();
             
             return Response.status(200).entity(output).build();

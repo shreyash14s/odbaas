@@ -1,8 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src"/>
+<<<<<<< HEAD
 	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry exported="true" kind="con" path="org.eclipse.jst.server.core.container/org.eclipse.jst.server.tomcat.runtimeTarget/Apache Tomcat v8.5"/>
+=======
+	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8">
+		<attributes>
+			<attribute name="owner.project.facets" value="java"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry exported="true" kind="con" path="org.eclipse.jst.server.core.container/org.eclipse.jst.server.tomcat.runtimeTarget/Apache Tomcat v9.0"/>
+>>>>>>> tempbranch
 	<classpathentry exported="true" kind="lib" path="WebContent/WEB-INF/lib/aopalliance-repackaged-2.5.0-b32.jar"/>
 	<classpathentry exported="true" kind="lib" path="WebContent/WEB-INF/lib/hk2-api-2.5.0-b32.jar"/>
 	<classpathentry exported="true" kind="lib" path="WebContent/WEB-INF/lib/hk2-locator-2.5.0-b32.jar"/>
@@ -20,10 +29,18 @@
 	<classpathentry exported="true" kind="lib" path="WebContent/WEB-INF/lib/jersey-guava-2.25.1.jar"/>
 	<classpathentry exported="true" kind="lib" path="WebContent/WEB-INF/lib/jersey-media-jaxb.jar"/>
 	<classpathentry exported="true" kind="lib" path="WebContent/WEB-INF/lib/jersey-server.jar"/>
+<<<<<<< HEAD
 	<classpathentry exported="true" kind="lib" path="WebContent/WEB-INF/lib/mysql-connector-java-5.1.44-bin.jar"/>
+=======
+>>>>>>> tempbranch
 	<classpathentry exported="true" kind="lib" path="WebContent/WEB-INF/lib/org.osgi.core-4.2.0.jar"/>
 	<classpathentry exported="true" kind="lib" path="WebContent/WEB-INF/lib/osgi-resource-locator-1.0.1.jar"/>
 	<classpathentry exported="true" kind="lib" path="WebContent/WEB-INF/lib/persistence-api-1.0.jar"/>
 	<classpathentry exported="true" kind="lib" path="WebContent/WEB-INF/lib/validation-api-1.1.0.Final.jar"/>
+<<<<<<< HEAD
 	<classpathentry kind="output" path="bin"/>
+=======
+	<classpathentry exported="true" kind="lib" path="WebContent/WEB-INF/lib/client-1.0.0.jar"/>
+	<classpathentry kind="output" path="build/classes"/>
+>>>>>>> tempbranch
 </classpath>

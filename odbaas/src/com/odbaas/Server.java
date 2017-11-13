@@ -2,6 +2,7 @@
 
 package com.odbaas;
 
+import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletContext;
@@ -28,7 +29,7 @@ public class Server {
 	
         @GET
 	@Path("mytest/{param}")
-	public Response getMsg(@PathParam("param") String msg) 
+	public Response getMsg(@PathParam("param") String msg) throws ClassNotFoundException, SQLException 
         {
             System.out.println("Sbfdgn");
             //Database db = new Database();
@@ -40,7 +41,7 @@ public class Server {
         
         @GET
 	@Path("mytry/{param}")
-	public Response tryMsg(@PathParam("param") String msg) 
+	public Response tryMsg(@PathParam("param") String msg) throws ClassNotFoundException, SQLException 
         {
             System.out.println("try");
             //Database db = new Database();
@@ -51,26 +52,36 @@ public class Server {
             return Response.status(200).entity(output).build();
         }
         
-       	@Path("/login")
+    @Path("/login")
 	@POST
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	@Produces("application/json")
 	public Response login(@FormParam("user_name") String userName, @FormParam("password") String password)
 	{
             JSONObject obj = new JSONObject();
-            Login login = new Login(userName,password);
-            String token = login.getToken();
+            Login login;
+			try {
+				login = new Login(userName,password);
+				String token = login.getToken();
+	            
+	            if (!(token.length() > 0))
+	            {
+	                obj.put("error","User-name already exists or Password is Invalid.");
+	                obj.put("status",401);
+	                return Response.status(Status.UNAUTHORIZED).entity(obj.toString()).build();
+	            }
+	            obj.put("token",token);
+	            obj.put("status",200);
+	            return Response.status(Status.OK).entity(obj.toString()).build();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				obj.put("error",e.getMessage());
+	            obj.put("status",300);
+				return Response.status(Status.BAD_GATEWAY).entity(obj.toString()).build();
+			}
             
-            if (!(token.length() > 0))
-            {
-                obj.put("error","User-name already exists or Password is Invalid.");
-                obj.put("status",401);
-                return Response.status(Status.UNAUTHORIZED).entity(obj.toString()).build();
-            }
-            obj.put("token",token);
-            obj.put("status",200);
-            return Response.status(Status.OK).entity(obj.toString()).build();
             //something
+			return Response.status(Status.BAD_GATEWAY).build();
 			
 	}
 	
@@ -81,8 +92,47 @@ public class Server {
 	public Response createTable(@PathParam("table_name") String tableName, @FormParam("token") String token, @FormParam("schema") String schema, @FormParam("primary_key") String pKey)
 	{
             
-            return null;
+        Validate validate;
+        JSONObject obj = new JSONObject();
+		try {
+			validate = new Validate(token);
+			
+	        
+	        
+	        if( !validate.isValid() )
+	        {
+	        	 obj.put("error","Token is Invalid.");
+	             obj.put("status",401);
+	             return Response.status(Status.UNAUTHORIZED).entity(obj.toString()).build();
+	        }
+			
+	        String user = validate.getUser();
+	        CRUD crud;
+	        crud = new CRUD(user);
+			crud.createTable(schema, pKey);
+			
+			obj.put("success","Table is created.");
+            obj.put("status",200);
+            
+			return Response.status(Status.ACCEPTED).entity(obj.toString()).build();
+			
+		} catch (ClassNotFoundException e1) {
+			obj.put("error",e1.getMessage());
+            obj.put("status",500);
+            return Response.status(Status.INTERNAL_SERVER_ERROR).entity(obj.toString()).build();
+			
+		} catch (SQLException e1) {
+			obj.put("error",e1.getMessage());
+            obj.put("status",500);
+            return Response.status(Status.BAD_REQUEST).entity(obj.toString()).build();
+		
+		}
+        
+	
+         
+        
 		//something
+		return Response.status(Status.BAD_GATEWAY).build();
 			
 	}
 	

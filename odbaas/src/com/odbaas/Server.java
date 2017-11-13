@@ -81,7 +81,7 @@ public class Server {
 			}
             
             //something
-			return Response.status(Status.BAD_GATEWAY).build();
+			
 			
 	}
 	
@@ -132,7 +132,7 @@ public class Server {
          
         
 		//something
-		return Response.status(Status.BAD_GATEWAY).build();
+		
 			
 	}
 	

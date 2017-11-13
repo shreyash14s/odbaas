@@ -61,16 +61,23 @@ public class Login {
 				myQuery = "UPDATE " + tableName + " SET token='" + token 
 							+ "' WHERE uid='" + uid + "';";
 				System.out.println(db.update(myQuery));
-			} else {
+			} 
+			else 
+			{
 				System.out.println("Token error:");
 			}
-		} else {
+		} 
+		else 
+		{
 			this.uid = signUp(user_name, password);
 			System.out.println(uid);
 			this.token = getToken(appId, uid, password);
 			if (token.length() > 0) {
 				myQuery = "INSERT INTO " + tableName + " values ('" + token 
 							+ "','" + user_name + "','" + uid + "')" + ";";
+				System.out.println(myQuery);
+				System.out.println(db.insert(myQuery));
+				myQuery="CREATE DATABASE "+this.user_name+" ;";
 				System.out.println(myQuery);
 				System.out.println(db.insert(myQuery));
 			}

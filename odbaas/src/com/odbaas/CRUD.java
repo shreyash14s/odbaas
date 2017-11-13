@@ -7,9 +7,10 @@ public class CRUD {
 	String table;
 	Database db;
 	
-	CRUD(String dbname) throws ClassNotFoundException, SQLException {
+	CRUD(String dbname,String table) throws ClassNotFoundException, SQLException {
 		// this.dbname = dbname;
 		db = new Database(dbname);
+		this.table=table;
 	}
 
 	void setTable(String table) {
@@ -19,13 +20,18 @@ public class CRUD {
 	void createTable( String schema,String primaryKey) throws SQLException
     {
     	String attr = "";
-    	String[] temp;
-    	for(String i: schema.split(","))
+    	String[] temp=schema.split(",");
+    	for(String i: temp)
     	{
     		temp = i.split(":");
     		attr = attr + temp[0] + " " + temp[1] + ",";
     	}
+    	if(temp.length>0)
+    	{
+    		attr = attr.substring(0,attr.length()-1);
+    	}
     	String query = "CREATE TABLE " + table + " ( "  + attr + " );";
+    	System.out.println("my create query: "+query);
     	try {
 			int res = db.update(query);
 			

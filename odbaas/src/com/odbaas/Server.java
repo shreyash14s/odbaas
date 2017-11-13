@@ -108,7 +108,7 @@ public class Server {
 			
 	        String user = validate.getUser();
 	        CRUD crud;
-	        crud = new CRUD(user);
+	        crud = new CRUD(user,tableName);
 			crud.createTable(schema, pKey);
 			
 			obj.put("success","Table is created.");

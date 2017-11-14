@@ -29,7 +29,7 @@ public class Server {
 	@Context
 	private ServletContext sctx;
 	
-        @GET
+    @GET
 	@Path("mytest/{param}")
 	public Response getMsg(@PathParam("param") String msg) throws ClassNotFoundException, SQLException 
         {
@@ -41,7 +41,7 @@ public class Server {
             return Response.status(200).entity(output).build();
         }
         
-        @GET
+    @GET
 	@Path("mytry/{param}")
 	public Response tryMsg(@PathParam("param") String msg) throws ClassNotFoundException, SQLException 
         {
@@ -53,6 +53,29 @@ public class Server {
             System.out.println(validate.getUser());
             return Response.status(200).entity(output).build();
         }
+        
+        
+    @GET
+	@Path("myinsert/{param}")
+	public Response myInsert(@PathParam("param") String msg) throws ClassNotFoundException, SQLException 
+    {
+        
+        CRUD crud = new CRUD("WhutisThis", "emp");
+        JSONArray array = new JSONArray();
+        JSONObject obj = new JSONObject();
+        obj.put("id",5);
+        obj.put("name","durg");
+        array.put(obj);
+        JSONObject obj2 = new JSONObject();
+        obj2.put("id",6);
+        obj2.put("name","kam");
+        array.put(obj2);
+        //Database db = new Database();
+        crud.insertTable(array.toString());
+        String output = "tryMsg say : ";
+        //System.out.println(validate.getUser());
+        return Response.status(200).entity(output).build();
+    }
         
     @Path("/login")
 	@POST
@@ -142,9 +165,43 @@ public class Server {
 	@POST
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	@Produces("application/json")
-	public Response insertTable(@PathParam("table_name") String tableName, @FormParam("token") String token, @FormParam("schema") String schema,@FormParam("data") String data)
+	public Response insertTable(@PathParam("table_name") String tableName, @FormParam("token") String token,@FormParam("data") String data)
 	{
-		return null;
+            Validate validate;
+            JSONObject obj = new JSONObject();
+            
+            try 
+            {
+                validate = new Validate(token);
+                if( !validate.isValid() )
+	        {
+                    obj.put("error","Token is Invalid.");
+                    obj.put("status",401);
+                    return Response.status(Status.UNAUTHORIZED).entity(obj.toString()).build();
+	        }
+			
+	        String user = validate.getUser();
+	        CRUD crud = new CRUD(user,tableName);
+                int rows=crud.insertTable(data);
+                obj.put("success",rows+" Rows affected");
+                obj.put("status",200);
+            
+                return Response.status(Status.ACCEPTED).entity(obj.toString()).build();
+			
+            }
+            catch (ClassNotFoundException e1) 
+            {
+                obj.put("error",e1.getMessage());
+                obj.put("status",500);
+                return Response.status(Status.INTERNAL_SERVER_ERROR).entity(obj.toString()).build();
+			
+            } 
+            catch (SQLException e1) 
+            {
+                obj.put("error",e1.getMessage());
+                obj.put("status",500);
+                return Response.status(Status.BAD_REQUEST).entity(obj.toString()).build();
+            }
 		//something
 			
 	}

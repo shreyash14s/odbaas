@@ -1,9 +1,15 @@
 package com.odbaas;
 
+import java.sql.BatchUpdateException;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
 import javax.ws.rs.core.Response;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import jersey.repackaged.com.google.common.collect.SortedMapDifference;
@@ -78,6 +84,63 @@ public class CRUD {
 			e.printStackTrace();
 			throw e;
 		}
+    }
+	private List<String> getKeys(JSONArray array)
+    {
+        JSONObject obj = array.getJSONObject(0);
+        Iterator<String> it=obj.keys();
+        List<String> keys = new ArrayList<String>();
+        while(it.hasNext())
+        {
+            keys.add((String)it.next());
+        }
+        return keys;
+    }
+    int insertTable(String data) throws SQLException,JSONException,BatchUpdateException
+    {
+        
+        try
+        {
+            JSONArray array = new JSONArray(data);
+            if (array.length() == 0)
+            {
+                throw new JSONException("Empty JSON array");
+            }
+            List<String> keys = getKeys(array);
+            String FIELDS=String.join(",",keys);
+            FIELDS= "( "+FIELDS+" )";
+            String[] place = new String[keys.size()];
+            for(int i=0;i<place.length;++i)
+            {
+                place[i]="?";
+            }                
+            String compiled = "("+String.join(",", place)+")";
+            String query= "INSERT INTO "+this.table+" "+FIELDS+" VALUES"+compiled;
+            System.out.println("Query is:");
+            System.out.println(query);
+            int i=db.insert(query,keys,array);
+            System.out.println("Total is : "+i);
+            return i;
+        }
+        catch(JSONException e)
+        {
+            e.printStackTrace();
+            throw e;
+        }
+        catch(SQLException e)
+        {
+            e.printStackTrace();
+            throw e;
+        }
+        
+        catch(Exception e)
+        {
+            e.printStackTrace();
+            throw e;
+        }
+        
+        
+        
     }
 
 }

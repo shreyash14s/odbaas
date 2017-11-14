@@ -1,4 +1,4 @@
-package mysqlConnect;
+package com.odbaas;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -9,7 +9,7 @@ import java.sql.Statement;
 
 public class sqlCmd 
 {
-	public static void main(String args[])
+	public static void main(String[] args)
 	{
 		connectSql();
 	}
@@ -31,7 +31,7 @@ public class sqlCmd
 	    try {
 	        String PUBLIC_DNS="odbaas.cfljz4glvwaq.us-east-2.rds.amazonaws.com";
 			String PORT="3306";
-			String DATABASE="mytest";
+			String DATABASE="information_schema";
 			String REMOTE_DATABASE_USERNAME="sidarthur2710";
 			String DATABASE_USER_PASSWORD="incorrect";
 			connection = DriverManager.
@@ -40,7 +40,8 @@ public class sqlCmd
 			//st.executeUpdate("INSERT INTO mytabletest (id, name) "+"VALUES ('id001', 'Flinstone')");
 			//st.executeUpdate("INSERT INTO mytabletest (id, name) "+"VALUES ('id002', 'Fred')");
 			//ResultSet rs = st.executeQuery("select * from mytabletest");
-			ResultSet rs = st.executeQuery("select * from trial");
+			ResultSet rs = st.executeQuery("select * from GLOBAL_STATUS");
+			System.out.println(ResultSetConverter.convert(rs)); 
 			
 			while(rs.next())
 			//rs.next();

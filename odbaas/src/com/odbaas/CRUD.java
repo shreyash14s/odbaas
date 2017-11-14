@@ -3,6 +3,12 @@ package com.odbaas;
 import java.sql.SQLException;
 import javax.ws.rs.core.Response;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import jersey.repackaged.com.google.common.collect.SortedMapDifference;
+
+
 public class CRUD {
 	String table;
 	Database db;
@@ -42,5 +48,36 @@ public class CRUD {
 		}
     }
 	
+	JSONArray selectTable(String  columns,String where,String sortColumns,String sortOrder,String limit) throws SQLException
+    {
+    	System.out.println("Hello");
+		String query = "SELECT " + columns + " FROM " + this.table;
+		if(where != null)
+			query = query + " WHERE " + where;
+		if(sortColumns != null)
+		{
+			query = query + " ORDER BY " + sortColumns;
+			if(sortOrder == null)
+				query = query + " ASC ";
+			else
+				query = query + " " + sortOrder;
+		}
+		
+		if(limit != null)
+			query = query + " LIMIT " + limit;
+		
+		query = query + ";";
+		
+		System.out.println(query);
+    	try {
+    		JSONArray a = db.selectAllRow(query);
+    		System.out.println(a.toString());
+			return a;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			throw e;
+		}
+    }
 
 }

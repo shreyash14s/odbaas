@@ -6,6 +6,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import org.json.JSONArray;
+
 public class Database 
 {
 	Connection connection=null;
@@ -74,6 +76,18 @@ public class Database
 		}
 	}
 
+	public JSONArray selectAllRow(String query) throws SQLException {
+		try {
+			Statement st =  connection.createStatement();
+			// st.execute("use "+databaseName);
+			ResultSet rs = st.executeQuery(query);
+			return ResultSetConverter.convert(rs);
+		} catch(SQLException e) {
+			e.printStackTrace();
+			throw e;
+		}
+	}
+	
 	public boolean isTrue(String searchQuery) throws SQLException {
 		int count = 0;
 		try {

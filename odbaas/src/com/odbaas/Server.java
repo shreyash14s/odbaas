@@ -20,6 +20,8 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.QueryParam;
+
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 @Path("/odbaas")
@@ -155,17 +157,59 @@ public class Server {
 	{
 		return "Hi there";
 	}
+	*/
 	
 	@Path("/select")
 	@GET
 	@Produces("application/json")
-	public Response selectTable(@QueryParam("table_name") String tableName, @QueryParam("token") String token, @QueryParam("columns") String columns,@QueryParam("where") String where,@QueryParam("sort") String sort, @QueryParam("limit") String limit )
+	public Response selectTable(@QueryParam("table_name") String tableName, @QueryParam("token") String token, @QueryParam("columns") String columns,@QueryParam("where") String where,@QueryParam("sort_cols") String sortCols,@QueryParam("sort_order") String sortOrder, @QueryParam("limit") String limit)
 	{
-		return null;
-		//something
+		JSONObject obj = new JSONObject();
+		try
+		{
 			
+			
+			Validate validate = new Validate(token);
+	        JSONObject res = new JSONObject();
+	        CRUD crud;
+	        
+	        
+	        if( !validate.isValid() )
+	        {
+	        	 obj.put("error","Token is Invalid.");
+	             obj.put("status",401);
+	             return Response.status(Status.UNAUTHORIZED).entity(obj.toString()).build();
+	        }
+			
+	        String user = validate.getUser();
+	        crud = new CRUD(user,tableName);
+	        
+	        JSONArray values = crud.selectTable( columns, where, sortCols,sortOrder,limit);
+	        
+	        res.put("length", values.length() );
+	        res.put("values",values);
+	        
+	        obj.put("success","Select is done.");
+	        obj.put("status",200);
+	        obj.put("res",res);
+	        
+	        return Response.status(Status.ACCEPTED).entity(obj.toString()).build();
+		}
+		catch (ClassNotFoundException e1) {
+			obj.put("error",e1.getMessage());
+            obj.put("status",500);
+            return Response.status(Status.INTERNAL_SERVER_ERROR).entity(obj.toString()).build();
+			
+		} catch (SQLException e1) {
+			obj.put("error",e1.getMessage());
+            obj.put("status",500);
+            return Response.status(Status.BAD_REQUEST).entity(obj.toString()).build();
+		
+		}
 	}
-	*/
+	
+	
+	/*
 	@Path("/select")
 	@GET
 	@Produces(MediaType.TEXT_PLAIN)
@@ -175,6 +219,8 @@ public class Server {
 		//something
 			
 	}
+	*/
+	
 	@Path("/update/{table_name}")
 	@PUT
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED )

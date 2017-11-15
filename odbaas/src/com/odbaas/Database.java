@@ -29,14 +29,14 @@ public class Database
 		
 		try {
 			connection = DriverManager.getConnection(url, 
-						REMOTE_DATABASE_USERNAME, DATABASE_USER_PASSWORD);
+			REMOTE_DATABASE_USERNAME, DATABASE_USER_PASSWORD);
 			connection.createStatement().execute("use " + database);
 		} catch (SQLException e) {
 			e.printStackTrace();
 			throw e;
 		}
 	}
-
+	
 	private void doCheck() throws ClassNotFoundException {
 		try  {
 			Class.forName(myConnector);
@@ -45,7 +45,7 @@ public class Database
 			throw e;
 		}
 	}
-
+	
 	public String selectOne(String searchQuery, String column) throws SQLException {
 		String result = "";
 		try {
@@ -61,7 +61,7 @@ public class Database
 		}
 		return result;
 	}
-
+	
 	public String[] selectOneRow(String searchQuery) throws SQLException {
 		try {
 			Statement st =  connection.createStatement();
@@ -80,7 +80,7 @@ public class Database
 			throw e;
 		}
 	}
-
+	
 	public JSONArray selectAllRow(String query) throws SQLException {
 		try {
 			Statement st =  connection.createStatement();
@@ -108,7 +108,7 @@ public class Database
 		}
 		return count > 0;
 	}
-
+	
 	public int insert(String searchQuery) throws SQLException {
 		int val = 0;
 		try {
@@ -121,12 +121,11 @@ public class Database
 		}
 		return val;
 	}
-
+	
 	public int update(String searchQuery) throws SQLException {
 		int val = 0;
 		try {
-			Statement st =  connection.createStatement();
-			// st.execute("use "+databaseName);
+			Statement st = connection.createStatement();
 			val = st.executeUpdate(searchQuery);
 		} catch(SQLException e) {
 			e.printStackTrace();
@@ -134,69 +133,52 @@ public class Database
 		}
 		return val;
 	}
-	public int insert(String query,List<String> keys,JSONArray array) throws SQLException,JSONException,BatchUpdateException
-    {
-        try
-        {
-            PreparedStatement ps = connection.prepareStatement(query); 
-            connection.setAutoCommit(false);
-            for(int i=0;i<array.length();++i)
-            {
-                JSONObject obj = array.getJSONObject(i);
-                System.out.println("For row number :"+i);
-                for(int j=0;j<keys.size();++j)
-                {
-                    System.out.println("Key is: "+keys.get(j));
-                    Object arg = obj.get(keys.get(j));
-                    
-                    if (arg instanceof Integer)
-                    {
-                        System.out.println("Values is:"+(Integer)arg);
-                        ps.setInt((j+1), (Integer) arg);
-                    }
-                    else if(arg instanceof Long)
-                    {
-                        ps.setLong((j+1), (Long) arg);
-                    }
-                    else if(arg instanceof Double)
-                    {
-                        ps.setDouble((j+1), (Double) arg);
-                    }
-                    else if(arg instanceof Float)
-                    {
-                        ps.setFloat((j+1), (Float) arg);
-                    }
-                    else
-                    {
-                        System.out.println("Values is:"+(String)arg);
-                        ps.setString((j+1),(String) arg);
-                    }
-                }
-                ps.addBatch();
-            }
-            int[] all=ps.executeBatch();
-            connection.commit();
-            int count=0;
-            for(int k=0;k<all.length;++k)
-            {
-                count+=all[k];
-            }
-            return count;
-        }
-        catch(SQLException e)
-        {
-            if(connection!=null)
-            {
-                connection.rollback();
-            }
-            e.printStackTrace();
-            throw e;
-        }
-        catch(JSONException e)
-        {
-            e.printStackTrace();
-            throw e;
-        }           
-    }
-
+	public int insert(String query, List<String> keys, JSONArray array) 
+				throws SQLException, JSONException {
+		try {
+			PreparedStatement ps = connection.prepareStatement(query); 
+			connection.setAutoCommit(false);
+			for(int i = 0; i < array.length(); ++i) {
+				JSONObject obj = array.getJSONObject(i);
+				System.out.println("For row number :" + i);
+				for(int j = 0; j < keys.size(); ++j) {
+					System.out.println("Key is: " + keys.get(j));
+					Object arg = obj.get(keys.get(j));
+					
+					if (arg instanceof Integer) {
+						System.out.println("Values is:"+(Integer)arg);
+						ps.setInt((j+1), (Integer) arg);
+					} else if(arg instanceof Long) {
+						ps.setLong((j+1), (Long) arg);
+					} else if(arg instanceof Double) {
+						ps.setDouble((j+1), (Double) arg);
+					} else if(arg instanceof Float) {
+						ps.setFloat((j+1), (Float) arg);
+					} else {
+						System.out.println("Values is:"+(String)arg);
+						ps.setString((j+1),(String) arg);
+					}
+				}
+				ps.addBatch();
+			}
+			int[] all = ps.executeBatch();
+			connection.commit();
+			connection.setAutoCommit(true);
+			int count = 0;
+			for(int k = 0; k < all.length; ++k) {
+				count += all[k];
+			}
+			return count;
+		} catch(SQLException e) {
+			if (connection != null) {
+				connection.rollback();
+				connection.setAutoCommit(true);
+			}
+			e.printStackTrace();
+			throw e;
+		} catch(JSONException e) {
+			e.printStackTrace();
+			throw e;
+		}
+	}
 }

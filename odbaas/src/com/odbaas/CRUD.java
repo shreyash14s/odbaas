@@ -49,8 +49,10 @@ public class CRUD {
 	}
 	
 	JSONArray selectTable(String columns, String where, String sortColumns, 
-	String sortOrder, String limit) throws SQLException {
-		if (columns == null) {
+	String sortOrder, String limit) throws SQLException 
+	{
+		if (columns == null ) {
+                        
 			columns = "*";
 		}
 		
@@ -74,7 +76,7 @@ public class CRUD {
 		
 		query = query + ";";
 		
-		// System.out.println(query);
+		System.out.println(query);
 		try {
 			JSONArray a = db.selectAllRow(query);
 			// System.out.println(a.toString());

@@ -112,10 +112,18 @@ public class Login {
 
 	boolean isTokenValid() {
 		boolean val;
-		try {
+		
+		try 
+		{
+			
 			IAMResponse response = client.validateToken(appId, token);
-			val = true;
+	        String myresponse=response.getPayload();
+	        System.out.println("Validity is:"+(myresponse.equals("Valid")));
+            return myresponse.equals("Valid");
+			//System.out.println("response is:"+response.getPayload());
+			
 		} catch(Exception e) {
+			System.out.println("Wrong");
 			e.printStackTrace();
 			val = false;
 		}

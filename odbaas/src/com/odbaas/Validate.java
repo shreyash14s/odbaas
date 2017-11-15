@@ -7,7 +7,9 @@ public class Validate extends Login {
 		super(token);
 	}
 
-	public boolean isValid() {
+	public boolean isValid() 
+	{
+		
 		if (this.getUserName().length() == 0) {
 			return false;
 		}

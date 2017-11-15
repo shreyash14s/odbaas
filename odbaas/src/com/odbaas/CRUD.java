@@ -15,9 +15,8 @@ public class CRUD {
 	Database db;
 	
 	CRUD(String dbname,String table) throws ClassNotFoundException, SQLException {
-		// this.dbname = dbname;
 		db = new Database(dbname);
-		this.table=table;
+		this.table = table;
 	}
 	
 	void setTable(String table) {
@@ -34,42 +33,44 @@ public class CRUD {
 		if (temp.length > 0) {
 			attr = attr.substring(0,attr.length()-1);
 		}
-
+		
 		if (primaryKey != null) {
 			attr = attr + ", PRIMARY KEY (" + primaryKey + ")";
 		}
-
+		
 		String query = "CREATE TABLE " + table + " ( "  + attr + " );";
 		// System.out.println("my create query: " + query);
 		try {
 			int res = db.update(query);
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			throw e;
 		}
 	}
 	
 	JSONArray selectTable(String columns, String where, String sortColumns, 
-						String sortOrder, String limit) throws SQLException {
-		if (columns == null) 
+	String sortOrder, String limit) throws SQLException {
+		if (columns == null) {
 			columns = "*";
-
+		}
+		
 		String query = "SELECT " + columns + " FROM " + this.table;
 		
-		if (where != null)
+		if (where != null) {
 			query = query + " WHERE " + where;
+		}
 		
 		if (sortColumns != null) {
 			query = query + " ORDER BY " + sortColumns;
-			if(sortOrder == null)
+			if(sortOrder == null) {
 				query = query + " ASC ";
-			else
+			} else {
 				query = query + " " + sortOrder;
+			}
 		}
 		
 		if (limit != null)
-			query = query + " LIMIT " + limit;
+		query = query + " LIMIT " + limit;
 		
 		query = query + ";";
 		
@@ -84,7 +85,7 @@ public class CRUD {
 			throw e;
 		}
 	}
-
+	
 	private List<String> getKeys(JSONArray array) {
 		JSONObject obj = array.getJSONObject(0);
 		Iterator<String> it = obj.keys();
@@ -102,16 +103,16 @@ public class CRUD {
 				throw new JSONException("Empty JSON array");
 			}
 			List<String> keys = getKeys(array);
-			String FIELDS = String.join(",", keys);
-			FIELDS = "( " + FIELDS + " )";
+			String fields = String.join(",", keys);
+			fields = "( " + fields + " )";
 			
 			String[] place = new String[keys.size()];
 			for(int i = 0; i < place.length; ++i) {
 				place[i] = "?";
 			}
-
+			
 			String compiled = "(" + String.join(",", place) + ")";
-			String query = "INSERT INTO " + this.table + " " + FIELDS + " VALUES" + compiled;
+			String query = "INSERT INTO " + this.table + " " + fields + " VALUES" + compiled;
 			// System.out.println("Query is: " + query);
 			int i = db.insert(query, keys, array);
 			// System.out.println("Total is : " + i);
@@ -127,22 +128,43 @@ public class CRUD {
 			throw e;
 		}
 	}
-
+	
 	int updateTable(String tableName, String set, String where) throws SQLException, JSONException {
 		String query = "UPDATE " + tableName + " SET " + set;
 		
-		if (where != null)
+		if (where != null) {
 			query = query + " WHERE " + where;
+		}
 		
 		query = query + ";";
 		
-		// System.out.println(query);
 		try {
 			int a = db.update(query);
-			// System.out.println(a.toString());
 			return a;
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
+			e.printStackTrace();
+			throw e;
+		}
+	}
+	
+	int deleteTable(String tableName, String where) throws SQLException {
+		String query = "DELETE FROM " + tableName + " where "  + where + ";";
+		System.out.println("my delete query: " + query);
+		try {
+			int res = db.update(query);
+			return res;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw e;
+		}
+	}
+	
+	void dropTable(String tableName) throws SQLException {
+		String query = "DROP TABLE " + tableName + ";";
+		System.out.println("my delete query: " + query);
+		try {
+			int res = db.update(query);
+		} catch (SQLException e) {
 			e.printStackTrace();
 			throw e;
 		}

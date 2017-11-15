@@ -166,7 +166,7 @@ public class Server {
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	@Produces("application/json")
 	public Response insertTable(@PathParam("table_name") String tableName, 
-				@FormParam("token") String token, @FormParam("data") String data) {
+	@FormParam("token") String token, @FormParam("data") String data) {
 		
 		Validate validate;
 		JSONObject obj = new JSONObject();
@@ -211,9 +211,9 @@ public class Server {
 	@GET
 	@Produces("application/json")
 	public Response selectTable(@QueryParam("table_name") String tableName, 
-			@QueryParam("token") String token, @QueryParam("columns") String columns,
-			@QueryParam("where") String where, @QueryParam("sort_cols") String sortCols,
-			@QueryParam("sort_order") String sortOrder, @QueryParam("limit") String limit) {
+	@QueryParam("token") String token, @QueryParam("columns") String columns,
+	@QueryParam("where") String where, @QueryParam("sort_cols") String sortCols,
+	@QueryParam("sort_order") String sortOrder, @QueryParam("limit") String limit) {
 		
 		JSONObject obj = new JSONObject();
 		try {
@@ -249,7 +249,7 @@ public class Server {
 			return Response.status(Status.BAD_REQUEST).entity(obj.toString()).build();
 		}
 	}
-
+	
 	/*
 	@Path("/select")
 	@GET
@@ -265,8 +265,8 @@ public class Server {
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	@Produces("application/json")
 	public Response updateTable(@PathParam("table_name") String tableName, 
-			@FormParam("token") String token, @FormParam("set") String set, 
-			@FormParam("where") String where) {
+	@FormParam("token") String token, @FormParam("set") String set, 
+	@FormParam("where") String where) {
 		
 		Validate validate;
 		JSONObject obj = new JSONObject();
@@ -303,24 +303,74 @@ public class Server {
 	@DELETE
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	@Produces("application/json")
-	public Response deleteTable(@PathParam("table_name") String tableName, @FormParam("token") String token,@QueryParam("where") String where )
-	{
-		return null;
-		//something
-		
+	public Response deleteTable(@PathParam("table_name") String tableName, 
+				@FormParam("token") String token, @FormParam("where") String where) {
+		Validate validate;
+		JSONObject obj = new JSONObject();
+		try {
+			validate = new Validate(token);
+			if (!validate.isValid()) {
+				obj.put("error","Token is Invalid.");
+				obj.put("status",401);
+				return Response.status(Status.UNAUTHORIZED).entity(obj.toString()).build();
+			}
+			
+			String user = validate.getUser();
+			CRUD crud;
+			crud = new CRUD(user,tableName);
+			int res=crud.deleteTable(tableName, where);
+			
+			obj.put("success ",res+" Rows Affected");
+			obj.put("status",200);
+			
+			return Response.status(Status.ACCEPTED).entity(obj.toString()).build();
+			
+		} catch (ClassNotFoundException e1) {
+			obj.put("error",e1.getMessage());
+			obj.put("status",500);
+			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(obj.toString()).build();
+		} catch (SQLException e1) {
+			obj.put("error",e1.getMessage());
+			obj.put("status",500);
+			return Response.status(Status.BAD_REQUEST).entity(obj.toString()).build();
+		}
 	}
 	
 	@Path("/drop/{table_name}")
 	@DELETE
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	@Produces("application/json")
-	public Response dropTable(@PathParam("table_name") String tableName, @FormParam("token") String token )
-	{
-		return null;
-		//something
-		
+	public Response dropTable(@PathParam("table_name") String tableName, 
+					@FormParam("token") String token) {
+		Validate validate;
+		JSONObject obj = new JSONObject();
+		try {
+			validate = new Validate(token);
+			if (!validate.isValid()) {
+				obj.put("error","Token is Invalid.");
+				obj.put("status",401);
+				return Response.status(Status.UNAUTHORIZED).entity(obj.toString()).build();
+			}
+			
+			String user = validate.getUser();
+			CRUD crud;
+			crud = new CRUD(user, tableName);
+			crud.dropTable(tableName);
+			
+			obj.put("success ", tableName + " Table deleted");
+			obj.put("status", 200);
+			
+			return Response.status(Status.ACCEPTED).entity(obj.toString()).build();
+		} catch (ClassNotFoundException e1) {
+			obj.put("error", e1.getMessage());
+			obj.put("status", 500);
+			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(obj.toString()).build();
+		} catch (SQLException e1) {
+			obj.put("error", e1.getMessage());
+			obj.put("status", 500);
+			return Response.status(Status.BAD_REQUEST).entity(obj.toString()).build();
+		}
 	}
-	
 }
 
 

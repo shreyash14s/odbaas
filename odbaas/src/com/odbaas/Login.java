@@ -9,11 +9,10 @@ import com.ansu.iam.client.exception.IAMInputException;
 import com.ansu.iam.client.exception.IAMServerErrorException;
 
 public class Login {
-	private final String appId = "83976235-c4de-427a-8e79-7daf1e94e899";
-	private final String internalDB = "internal";
-	private final String tableName = "Users";
+	private static final String appId = "83976235-c4de-427a-8e79-7daf1e94e899";
+	private static final String internalDB = "internal";
+	private static final String tableName = "Users";
 	private IAMClient client;
-	private Database db;
 	private String user_name;
 	private String uid;
 	private String token;
@@ -28,11 +27,14 @@ public class Login {
 	
 	Login() throws ClassNotFoundException, SQLException {
 		this.client = new IAMClient();
-		this.db = new Database(internalDB);
+		// this.db = new Database(internalDB);
 	}
 
 	Login(String token) throws ClassNotFoundException, SQLException {
 		this();
+		
+		Database db = new Database(internalDB);
+
 		this.token = token;
 		String myQuery = "SELECT * from " + tableName + " where token='" + token + "';";
 		if (db.isTrue(myQuery)) {
@@ -44,10 +46,14 @@ public class Login {
 			this.uid = "";
 			this.user_name = "";
 		}
+		db.close();
 	}
 
 	Login(String user_name, String password) throws ClassNotFoundException, SQLException {
 		this();
+
+		Database db = new Database(internalDB);
+
 		this.user_name = user_name;
 		String myQuery = "SELECT * from " + tableName + " where user='" + user_name + "';";
 		if (db.isTrue(myQuery)) {
@@ -61,14 +67,10 @@ public class Login {
 				myQuery = "UPDATE " + tableName + " SET token='" + token 
 							+ "' WHERE uid='" + uid + "';";
 				System.out.println(db.update(myQuery));
-			} 
-			else 
-			{
+			} else {
 				System.out.println("Token error:");
 			}
-		} 
-		else 
-		{
+		} else {
 			this.uid = signUp(user_name, password);
 			System.out.println(uid);
 			this.token = getToken(appId, uid, password);
@@ -82,6 +84,7 @@ public class Login {
 				System.out.println(db.insert(myQuery));
 			}
 		}
+		db.close();
 	}
 	
 	String signUp(String user_name, String password) {

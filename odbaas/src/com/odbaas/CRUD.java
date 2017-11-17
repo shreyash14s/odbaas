@@ -14,9 +14,18 @@ public class CRUD {
 	String table;
 	Database db;
 	
-	CRUD(String dbname,String table) throws ClassNotFoundException, SQLException {
+	public CRUD(String dbname, String table) throws ClassNotFoundException, SQLException {
 		db = new Database(dbname);
 		this.table = table;
+	}
+
+	void close() {
+		try {
+			db.close();
+		} catch (SQLException e) {
+			System.out.println("Error closing connection");
+			e.printStackTrace();
+		}
 	}
 	
 	void setTable(String table) {
@@ -49,10 +58,12 @@ public class CRUD {
 	}
 	
 	JSONArray selectTable(String columns, String where, String sortColumns, 
+
 	String sortOrder, String limit) throws SQLException 
 	{
 		if (columns == null ) {
                         
+
 			columns = "*";
 		}
 		
@@ -71,8 +82,9 @@ public class CRUD {
 			}
 		}
 		
-		if (limit != null)
-		query = query + " LIMIT " + limit;
+		if (limit != null) {
+			query = query + " LIMIT " + limit;
+		}
 		
 		query = query + ";";
 		
@@ -82,7 +94,6 @@ public class CRUD {
 			// System.out.println(a.toString());
 			return a;
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			throw e;
 		}
@@ -131,7 +142,8 @@ public class CRUD {
 		}
 	}
 	
-	int updateTable(String tableName, String set, String where) throws SQLException, JSONException {
+	int updateTable(String tableName, String set, String where) 
+				throws SQLException, JSONException {
 		String query = "UPDATE " + tableName + " SET " + set;
 		
 		if (where != null) {

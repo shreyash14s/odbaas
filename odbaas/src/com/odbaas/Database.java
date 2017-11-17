@@ -13,16 +13,16 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class Database 
-{
-	Connection connection=null;
+public class Database {
 	private final  String myConnector = "com.mysql.jdbc.Driver";
 	private final String PUBLIC_DNS = "odbaas.cfljz4glvwaq.us-east-2.rds.amazonaws.com";
 	private final String PORT = "3306";
 	private final String DATABASE = "mytest";
 	private final String REMOTE_DATABASE_USERNAME = "sidarthur2710";
 	private final String DATABASE_USER_PASSWORD = "incorrect";
-	
+
+	private Connection connection = null;
+
 	public Database(String database) throws ClassNotFoundException, SQLException {
 		doCheck();
 		String url = "jdbc:mysql://" + PUBLIC_DNS + ":" + PORT;
@@ -35,6 +35,10 @@ public class Database
 			e.printStackTrace();
 			throw e;
 		}
+	}
+
+	public void close() throws SQLException {
+		connection.close();
 	}
 	
 	private void doCheck() throws ClassNotFoundException {

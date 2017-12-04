@@ -4,6 +4,10 @@ ODBaaS is a free Database service which is set up to eliminate the need for depl
 
 **Version:** 1.0.0
 
+# Releases
+
+You may use our already existing endpoint mentioned [here](https://documenter.getpostman.com/view/2174475/odbaas/7E8hFgT). Or if that's not available you may look at the release we offer [here](https://github.com/shreyash14s/odbaas/releases/tag/v1.0).
+
 ### /login/
 ---
 ##### ***POST***
